@@ -274,7 +274,6 @@ connection.on("YouDiedPageInstant", function () {
 
 connection.on("VillagerWin", function (users) {
     setTimeout(function () {
-
     var targetDiv = $('#mafiaGame');
     targetDiv.load("/Home/VillagerWinScreen", function (responseTxt, statusTxt, xhr)
     {

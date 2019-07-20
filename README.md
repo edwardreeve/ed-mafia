@@ -1,4 +1,4 @@
-﻿# Sharipes Mafia
+﻿# Sharpies Mafia
 
 The idea behind this project was to remove the need of a narrator while playing this game so that everyone can join in. It also will help with voting as...
 
