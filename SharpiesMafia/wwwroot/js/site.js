@@ -91,10 +91,10 @@ connection.on("StartPageUserList", function (users, gameId) {     var targetDi
     });
 });
 
-connection.on("LoadResult", function (name, role, rolesCount)
+connection.on("LoadVoteResult", function (name, role, rolesCount)
 {
     var targetDiv = $('#mafiaGame');
-    targetDiv.load("/Home/LoadResultScreen", function ()
+    targetDiv.load("/Home/LoadVoteResultScreen", function ()
     {
         if (role === "mafia") {
             document.getElementById("resultDisplay").classList.add("text-success");
@@ -272,15 +272,56 @@ connection.on("YouDiedPageInstant", function () {
     GetNextPage("/Home/YouDiedScreen");
 });
 
-connection.on("VillagerWin", function () {
+connection.on("VillagerWin", function (users) {
     setTimeout(function () {
-        GetNextPage("/Home/VillagerWinScreen");
+    var targetDiv = $('#mafiaGame');
+    targetDiv.load("/Home/VillagerWinScreen", function (responseTxt, statusTxt, xhr)
+    {
+
+        if (statusTxt == "success") {
+            users.forEach(function (user) {
+                var li = document.createElement("li");
+                li.setAttribute('class', 'list-group-item');
+                li.textContent = user.name;
+                if (user.role == "mafia") {
+                    document.getElementById("MafiaListV").appendChild(li)
+                }
+                else {
+                    document.getElementById("VillagerListV").appendChild(li)
+                }
+            });
+        }
+        if (statusTxt === "error") {
+            alert("Error: " + xhr.status + ": " + xhr.statusText);
+        }
+    });
     }, 7000);
 });
 
-connection.on("MafiaWin", function () {
-    setTimeout(function () {
-        GetNextPage("/Home/MafiaWinScreen");
+connection.on("MafiaWin", function (users) {
+   setTimeout(function () {
+
+    var targetDiv = $('#mafiaGame');
+    targetDiv.load("/Home/MafiaWinScreen", function (responseTxt, statusTxt, xhr)
+    {
+
+        if (statusTxt == "success") {
+            users.forEach(function (user) {
+                var li = document.createElement("li");
+                li.setAttribute('class', 'list-group-item');
+                li.textContent = user.name;
+                if (user.role == "mafia") {
+                    document.getElementById("MafiaListM").appendChild(li)
+                }
+                else {
+                    document.getElementById("VillagerListM").appendChild(li)
+                }
+            });
+        }
+        if (statusTxt === "error") {
+            alert("Error: " + xhr.status + ": " + xhr.statusText);
+        }
+    });
     }, 7000);
 });
 
@@ -295,3 +336,14 @@ function speak(message) {
 
     spk.speak(to_speak);
 }
+
+connection.on("LoadVictimResult", function (name)
+{
+    setTimeout(function () {    
+    var targetDiv = $('#mafiaGame');
+    targetDiv.load("/Home/LoadVictimResultScreen", function ()
+    {
+        document.getElementById("deadVictim").innerHTML = capitalize(name);
+    });
+        }, 17000);
+});
